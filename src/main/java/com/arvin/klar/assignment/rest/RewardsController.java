@@ -1,8 +1,9 @@
 package com.arvin.klar.assignment.rest;
 
+import com.arvin.klar.assignment.data.DataStore;
 import com.arvin.klar.assignment.rest.types.Reward;
 import com.arvin.klar.assignment.rest.types.RewardsTotal;
-import com.arvin.klar.assignment.data.DataStore;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,10 @@ import java.util.List;
 
 @RestController
 public class RewardsController {
+
+    @Autowired
+    private DataStore dataStore;
+
     @PostMapping("/rewards")
     public ResponseEntity<List<Reward>> rewards(final @RequestBody List<Reward> rewards) {
         for (final Reward reward : rewards) {
@@ -24,15 +29,13 @@ public class RewardsController {
         }
 
         /* Since all rewards are valid, process them */
-        for (final Reward reward : rewards) {
-            DataStore.getInstance().addReward(reward);
-        }
+        dataStore.addRewards(rewards);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/reward/total/{date}")
     public RewardsTotal rewardTotalForDate(final @PathVariable String date) {
-        return DataStore.getInstance().getRewardsTotalForDate(date);
+        return dataStore.getRewardsTotalForDate(date);
     }
 }
