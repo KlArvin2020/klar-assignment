@@ -159,4 +159,28 @@ public class EndpointTests {
                 restTemplate.exchange(getRewardsUrl(), HttpMethod.POST, request, String.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
+
+    @Test
+    @Order(8)
+    public void testRewardsWithEmptyContent() {
+        final HttpEntity<String> request = new HttpEntity<>("", headers);
+        final ResponseEntity<String> responseEntity =
+                restTemplate.exchange(getRewardsUrl(), HttpMethod.POST, request, String.class);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+    }
+
+    @Test
+    @Order(9)
+    public void testRewardsWithIncompleteContent() throws JSONException {
+        final JSONArray illegalPayload = new JSONArray(exampleRewardsPayload.toString());
+        /* What does it mean for a timestamp to be "invalid" when it is specified in milliseconds since 1970-01-01? */
+        final JSONObject illegalReward = new JSONObject();
+        illegalReward.put("amount", 150.00);
+        illegalPayload.put(illegalReward);
+
+        final HttpEntity<String> request = new HttpEntity<>(illegalPayload.toString(), headers);
+        final ResponseEntity<String> responseEntity =
+                restTemplate.exchange(getRewardsUrl(), HttpMethod.POST, request, String.class);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+    }
 }

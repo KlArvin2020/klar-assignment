@@ -61,9 +61,9 @@ at `com.arvin.klar.assignment.data.DataStore` and concrete implementations can e
 Right now only a in-memory data store exists.
 #### In-memory data store
 The in-memory data store (`com.arvin.klar.assignment.data.MemoryDataStore`) stores tracker objects for each date where
-a transaction has taken place in a `HashMap` to allow `O(1)` lookup time.
-It does not store or persist transactions in any way.
-It only stores the information relevant to return information about the cash back rewards for specific dates.
+a transaction has taken place. The tracker objects are stored in a `HashMap` to allow `O(1)` lookup time.
+The in-memory data store does not store or persist transactions in any way.
+The in-memory data store only stores the information relevant to return information about the cash back rewards for specific dates.
 
 The in-memory data store is thread-safe and handles all rewards in a transaction before the lock on the data store is
 released and another transaction can access it.
